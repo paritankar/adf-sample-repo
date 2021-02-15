@@ -1,0 +1,41 @@
+{
+	"name": "DataValidationRule",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "CompanyInfo",
+						"type": "DatasetReference"
+					},
+					"name": "CustomerDB"
+				}
+			],
+			"sinks": [
+				{
+					"name": "SQLServer"
+				},
+				{
+					"dataset": {
+						"referenceName": "CompanyInfo",
+						"type": "DatasetReference"
+					},
+					"name": "Snowflake"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Derived"
+				},
+				{
+					"name": "Split1"
+				},
+				{
+					"name": "Aggregate1"
+				}
+			],
+			"script": "source(output(\n\t\tcompany_key as integer,\n\t\tcompany_name as string,\n\t\tcpi_rate as double,\n\t\ttax_exempt as string,\n\t\tactive_flag as string,\n\t\tbilling_addr_1 as string,\n\t\tbilling_addr_2 as string,\n\t\tbilling_addr_3 as string,\n\t\tshipping_addr_1 as string,\n\t\tshipping_addr_2 as string,\n\t\tshipping_addr_3 as string,\n\t\tupdate_date as timestamp\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tisolationLevel: 'READ_COMMITTED',\n\tformat: 'table') ~> CustomerDB\nCustomerDB select(mapColumn(\n\t\tid = company_key,\n\t\tname = company_name,\n\t\tcpi_rate,\n\t\ttax_exempt,\n\t\tIsactive = active_flag,\n\t\tbilling_addr_1,\n\t\tbilling_addr_2,\n\t\tbilling_addr_3,\n\t\tshipping_addr_1,\n\t\tshipping_addr_2,\n\t\tshipping_addr_3,\n\t\tupdate_date\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Derived\nDerived split(Isactive != '1',\n\tIsactive == '1',\n\tdisjoint: false) ~> Split1@(NonActive, Active)\nSplit1@Active aggregate(groupBy(id),\n\tcountid = sum(id)) ~> Aggregate1\nSplit1@NonActive sink(skipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tstore: 'cache',\n\tformat: 'inline',\n\tsaveOrder: 1) ~> SQLServer\nAggregate1 sink(input(\n\t\tcompany_key as integer,\n\t\tcompany_name as string,\n\t\tcpi_rate as double,\n\t\ttax_exempt as string,\n\t\tactive_flag as string,\n\t\tbilling_addr_1 as string,\n\t\tbilling_addr_2 as string,\n\t\tbilling_addr_3 as string,\n\t\tshipping_addr_1 as string,\n\t\tshipping_addr_2 as string,\n\t\tshipping_addr_3 as string,\n\t\tupdate_date as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> Snowflake"
+		}
+	}
+}

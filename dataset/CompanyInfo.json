@@ -1,0 +1,70 @@
+{
+	"name": "CompanyInfo",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SQLTorana",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "company_key",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "company_name",
+				"type": "varchar"
+			},
+			{
+				"name": "cpi_rate",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "tax_exempt",
+				"type": "varchar"
+			},
+			{
+				"name": "active_flag",
+				"type": "varchar"
+			},
+			{
+				"name": "billing_addr_1",
+				"type": "varchar"
+			},
+			{
+				"name": "billing_addr_2",
+				"type": "varchar"
+			},
+			{
+				"name": "billing_addr_3",
+				"type": "varchar"
+			},
+			{
+				"name": "shipping_addr_1",
+				"type": "varchar"
+			},
+			{
+				"name": "shipping_addr_2",
+				"type": "varchar"
+			},
+			{
+				"name": "shipping_addr_3",
+				"type": "varchar"
+			},
+			{
+				"name": "update_date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "billing",
+			"table": "company_details"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

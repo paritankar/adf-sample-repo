@@ -1,0 +1,66 @@
+{
+	"name": "Icedq_sink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Icedq_support1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "CustomerID",
+				"type": "varchar"
+			},
+			{
+				"name": "Customeralternetkey",
+				"type": "varchar"
+			},
+			{
+				"name": "FirstName",
+				"type": "varchar"
+			},
+			{
+				"name": "LastName",
+				"type": "varchar"
+			},
+			{
+				"name": "FullName",
+				"type": "varchar"
+			},
+			{
+				"name": "Gender",
+				"type": "varchar"
+			},
+			{
+				"name": "BirthDate",
+				"type": "varchar"
+			},
+			{
+				"name": "DateFirstPurchase",
+				"type": "varchar"
+			},
+			{
+				"name": "PhoneNo",
+				"type": "varchar"
+			},
+			{
+				"name": "Email",
+				"type": "varchar"
+			},
+			{
+				"name": "YearlyIncome",
+				"type": "varchar"
+			},
+			{
+				"name": "AddressID",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Customer_DW"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
